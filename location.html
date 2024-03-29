@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Location Check</title>
+</head>
+<body>
+<script>
+function checkLocation() {
+    // Check if geolocation is supported
+    if ("geolocation" in navigator) {
+        // Request permission to access geolocation
+        navigator.permissions.query({name:'geolocation'}).then(permissionStatus => {
+            if (permissionStatus.state === 'granted') {
+                // Permission granted, proceed with getting user's location
+                navigator.geolocation.getCurrentPosition(position => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+
+                    // Check if user's location falls within the specified latitude and longitude range
+                    if (userLat >= 17.6496804 && userLat <= 17.6485900 && userLng >= 73.9242137 && userLng <= 73.9242800) {
+                        // User is within the specified range, redirect to the given URL
+                        window.location.href = "https://www.youtube.com/"; // Replace with your desired URL
+                    } else {
+                        // User is not within the specified range, inform the user
+                        alert("You are not within the allowed location to access this content.");
+                    }
+                }, error => {
+                    // Error in getting user's location
+                    console.error("Error getting user's location:", error);
+                    alert("Unable to determine your location. Please make sure your device has access to location services and try again later.");
+                });
+            } else if (permissionStatus.state === 'prompt') {
+                // Permission prompt, user hasn't made a decision yet
+                console.log('Geolocation permission prompt.');
+            } else {
+                // Permission denied or unavailable
+                alert("Geolocation permission denied. You cannot access this feature.");
+            }
+        });
+    } else {
+        // Geolocation is not supported
+        alert("Geolocation is not supported by your browser. You cannot access this feature.");
+    }
+}
+
+// Call the function to check the location when the page loads
+checkLocation();
+</script>
+</body>
+</html>
